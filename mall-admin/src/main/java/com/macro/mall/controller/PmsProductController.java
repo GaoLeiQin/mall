@@ -9,28 +9,26 @@ import com.macro.mall.model.PmsProduct;
 import com.macro.mall.service.PmsProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * 商品管理Controller
  * Created by macro on 2018/4/26.
  */
-@Controller
+@RestController
 @Api(tags = "PmsProductController", description = "商品管理")
 @RequestMapping("/product")
 public class PmsProductController {
-    @Autowired
+    @Resource
     private PmsProductService productService;
 
     @ApiOperation("创建商品")
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('pms:product:create')")
     public CommonResult create(@RequestBody PmsProductParam productParam, BindingResult bindingResult) {
         int count = productService.create(productParam);
@@ -42,8 +40,7 @@ public class PmsProductController {
     }
 
     @ApiOperation("根据商品id获取商品编辑信息")
-    @RequestMapping(value = "/updateInfo/{id}", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/updateInfo/{id}")
     @PreAuthorize("hasAuthority('pms:product:read')")
     public CommonResult<PmsProductResult> getUpdateInfo(@PathVariable Long id) {
         PmsProductResult productResult = productService.getUpdateInfo(id);
@@ -51,8 +48,7 @@ public class PmsProductController {
     }
 
     @ApiOperation("更新商品")
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/update/{id}")
     @PreAuthorize("hasAuthority('pms:product:update')")
     public CommonResult update(@PathVariable Long id, @RequestBody PmsProductParam productParam, BindingResult bindingResult) {
         int count = productService.update(id, productParam);
@@ -64,8 +60,7 @@ public class PmsProductController {
     }
 
     @ApiOperation("查询商品")
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/list")
     @PreAuthorize("hasAuthority('pms:product:read')")
     public CommonResult<CommonPage<PmsProduct>> getList(PmsProductQueryParam productQueryParam,
                                                         @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
@@ -75,16 +70,14 @@ public class PmsProductController {
     }
 
     @ApiOperation("根据商品名称或货号模糊查询")
-    @RequestMapping(value = "/simpleList", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping("/simpleList")
     public CommonResult<List<PmsProduct>> getList(String keyword) {
         List<PmsProduct> productList = productService.list(keyword);
         return CommonResult.success(productList);
     }
 
     @ApiOperation("批量修改审核状态")
-    @RequestMapping(value = "/update/verifyStatus", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/update/verifyStatus")
     @PreAuthorize("hasAuthority('pms:product:update')")
     public CommonResult updateVerifyStatus(@RequestParam("ids") List<Long> ids,
                                            @RequestParam("verifyStatus") Integer verifyStatus,
@@ -98,8 +91,7 @@ public class PmsProductController {
     }
 
     @ApiOperation("批量上下架")
-    @RequestMapping(value = "/update/publishStatus", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/update/publishStatus")
     @PreAuthorize("hasAuthority('pms:product:update')")
     public CommonResult updatePublishStatus(@RequestParam("ids") List<Long> ids,
                                             @RequestParam("publishStatus") Integer publishStatus) {
@@ -112,8 +104,7 @@ public class PmsProductController {
     }
 
     @ApiOperation("批量推荐商品")
-    @RequestMapping(value = "/update/recommendStatus", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/update/recommendStatus")
     @PreAuthorize("hasAuthority('pms:product:update')")
     public CommonResult updateRecommendStatus(@RequestParam("ids") List<Long> ids,
                                               @RequestParam("recommendStatus") Integer recommendStatus) {
@@ -126,8 +117,7 @@ public class PmsProductController {
     }
 
     @ApiOperation("批量设为新品")
-    @RequestMapping(value = "/update/newStatus", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/update/newStatus")
     @PreAuthorize("hasAuthority('pms:product:update')")
     public CommonResult updateNewStatus(@RequestParam("ids") List<Long> ids,
                                         @RequestParam("newStatus") Integer newStatus) {
@@ -140,8 +130,7 @@ public class PmsProductController {
     }
 
     @ApiOperation("批量修改删除状态")
-    @RequestMapping(value = "/update/deleteStatus", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/update/deleteStatus")
     @PreAuthorize("hasAuthority('pms:product:delete')")
     public CommonResult updateDeleteStatus(@RequestParam("ids") List<Long> ids,
                                            @RequestParam("deleteStatus") Integer deleteStatus) {
